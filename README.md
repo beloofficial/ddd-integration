@@ -69,7 +69,7 @@ docker-compose up -d --build
 
 ### Request
 
-```json
+```bash
 curl --location 'http://localhost:8080/app/example/aci' \
 --header 'Accept: application/json' \
 --form 'amount="500"' \

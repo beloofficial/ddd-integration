@@ -8,7 +8,7 @@ use App\Modules\PaymentOrchestration\UI\Http\Request\PaymentRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PaymentRequestResolver implements ArgumentValueResolverInterface
@@ -26,11 +26,7 @@ final class PaymentRequestResolver implements ArgumentValueResolverInterface
         $violations = $this->validator->validate($dto);
 
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $v) {
-                $errors[$v->getPropertyPath()][] = $v->getMessage();
-            }
-            throw new BadRequestHttpException(json_encode($errors));
+            throw new ValidationFailedException($dto, $violations);
         }
 
         yield $dto;
