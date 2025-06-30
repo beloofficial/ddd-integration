@@ -1,0 +1,66 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    aci.api_host: '%env(ACI_API_HOST)%'
+    aci.api_token: '%env(ACI_API_TOKEN)%'
+    shift4.api_host: '%env(SHIFT4_API_HOST)%'
+    shift4.api_token: '%env(SHIFT4_API_TOKEN)%'
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    GuzzleHttp\Client: ~
+
+    _abstract.guzzle_api:
+        class: App\Modules\PaymentOrchestration\Infrastructure\Api\GuzzleApi
+        abstract: true
+        arguments:
+            $client: '@GuzzleHttp\Client'
+
+    App\Modules\PaymentOrchestration\Infrastructure\Api\GuzzleApi.aci:
+        parent: _abstract.guzzle_api
+        arguments:
+            $configProvider: '@App\Modules\PaymentOrchestration\Infrastructure\Config\Aci\EnvApiServiceProvider'
+
+    App\Modules\PaymentOrchestration\Infrastructure\Api\GuzzleApi.shift4:
+        parent: _abstract.guzzle_api
+        arguments:
+            $configProvider: '@App\Modules\PaymentOrchestration\Infrastructure\Config\Shift4\EnvApiServiceProvider'
+
+    App\Modules\PaymentOrchestration\Infrastructure\Gateway\Aci\AciGateway:
+        arguments:
+            $api: '@App\Modules\PaymentOrchestration\Infrastructure\Api\GuzzleApi.aci'
+            $resultFactory: '@App\Modules\PaymentOrchestration\Infrastructure\Gateway\Aci\AciGatewayResponseFactory'
+        tags:
+            - { name: 'payment.gateway', alias: 'aci' }
+
+    App\Modules\PaymentOrchestration\Infrastructure\Gateway\Shift4\Shift4Gateway:
+        arguments:
+            $api: '@App\Modules\PaymentOrchestration\Infrastructure\Api\GuzzleApi.shift4'
+            $resultFactory: '@App\Modules\PaymentOrchestration\Infrastructure\Gateway\Shift4\Shift4GatewayResponseFactory'
+        tags:
+            - { name: 'payment.gateway', alias: 'shift4' }
+
+    App\Modules\PaymentOrchestration\Application\Factory\PaymentGatewayFactory: ~
+
+    App\Modules\PaymentOrchestration\UI\Cli\Presenter\CliPaymentPresenter: ~
+
+    App\Modules\PaymentOrchestration\UI\Cli\Command\PayCommand: ~
+

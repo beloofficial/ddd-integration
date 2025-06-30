@@ -1,0 +1,3 @@
+payment_orchestration:
+  resource: '../../src/Modules/PaymentOrchestration/UI/Http/Controller/'
+  type: attribute
