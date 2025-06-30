@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\UseCase;
+namespace App\Tests\Unit\Application\UseCase;
 
 use App\Modules\PaymentOrchestration\Application\Port\Outgoing\PaymentGatewayInterface;
 use App\Modules\PaymentOrchestration\Application\UseCase\PayWithCardUseCase;

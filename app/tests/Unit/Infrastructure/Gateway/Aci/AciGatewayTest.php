@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Gateway\Aci;
+namespace App\Tests\Unit\Infrastructure\Gateway\Aci;
 
 use App\Modules\PaymentOrchestration\Infrastructure\Api\Result;
 use App\Modules\PaymentOrchestration\Infrastructure\Gateway\Aci\AciGatewayResponse;
