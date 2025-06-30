@@ -80,15 +80,25 @@ curl --location 'http://localhost:8080/app/example/aci' \
 --form 'cvv="123"'
 ```
 
-### Response
+### Success Response
 
 ```json
 {
+  "status": "success",
   "transactionId": "char_eNRr1kKgzrKJR9y7pHsonGwg",
   "createdAt": "2025-06-30 14:42:53",
   "amount": 500,
   "currency": "EUR",
   "cardBin": "420000"
+}
+```
+
+### Error Response
+
+```json
+{
+  "status": "error",
+  "message": "Failed to send pay request to ACI PS: invalid or missing parameter"
 }
 ```
 
