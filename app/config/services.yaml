@@ -60,7 +60,15 @@ services:
 
     App\Modules\PaymentOrchestration\Application\Factory\PaymentGatewayFactory: ~
 
-    App\Modules\PaymentOrchestration\UI\Cli\Presenter\CliPaymentPresenter: ~
-
     App\Modules\PaymentOrchestration\UI\Cli\Command\PayCommand: ~
 
+    App\Modules\PaymentOrchestration\UI\Http\Presenter\JsonPaymentPresenter:
+        tags: [ { name: 'payment.presenter', context: 'http' } ]
+
+    App\Modules\PaymentOrchestration\UI\Cli\Presenter\CliPaymentPresenter:
+        tags: [ { name: 'payment.presenter', context: 'cli' } ]
+
+    App\Modules\PaymentOrchestration\Infrastructure\Presenter\DelegatingPaymentPresenter: ~
+
+    App\Modules\PaymentOrchestration\Application\Port\Outgoing\PaymentPresenterInterface:
+        alias: App\Modules\PaymentOrchestration\Infrastructure\Presenter\DelegatingPaymentPresenter

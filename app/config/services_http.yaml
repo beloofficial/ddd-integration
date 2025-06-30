@@ -1,3 +1,0 @@
-services:
-  App\Modules\PaymentOrchestration\Application\Port\Outgoing\PaymentPresenterInterface:
-    alias: App\Modules\PaymentOrchestration\UI\Http\Presenter\JsonPaymentPresenter
