@@ -9,14 +9,11 @@ use App\Modules\PaymentOrchestration\Application\Port\Outgoing\ApiServiceConfigP
 use App\Modules\PaymentOrchestration\Application\Port\Outgoing\HttpApiInterface;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 
 final class GuzzleApi implements HttpApiInterface
 {
-    private const UNKNOWN_ERROR = 'Unknown API error';
-
     private ApiServiceConfig $config;
 
     public function __construct(
@@ -36,25 +33,15 @@ final class GuzzleApi implements HttpApiInterface
 
         $options = [
             RequestOptions::FORM_PARAMS => $data,
-            RequestOptions::HTTP_ERRORS => true,
+            RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS     => $headers,
         ];
 
         $request = new Request($method, $this->getURI($url), $headers);
 
-        try {
-            $response = $this->client->send($request, $options);
+        $response = $this->client->send($request, $options);
 
-            return new Result($request, $response);
-        } catch (RequestException $exception) {
-            if ($resp = $exception->getResponse()) {
-                $json = json_decode($resp->getBody()->getContents(), true);
-
-                $message = $json['result']['description'] ?? self::UNKNOWN_ERROR;
-            }
-
-            throw new Exception($message ?? self::UNKNOWN_ERROR);
-        }
+        return new Result($request, $response);
     }
 
     /**

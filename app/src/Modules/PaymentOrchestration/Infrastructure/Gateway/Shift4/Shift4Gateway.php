@@ -27,9 +27,9 @@ final class Shift4Gateway implements PaymentGatewayInterface
     public function pay(Money $money, Card $card): Transaction
     {
         $body = [
-            'amount'        => $money->amount,
-            'currency'      => $money->currency,
-            'customerId'  => 'cust_jCgGLDVvj9hO8o0z4L3oIIvT',
+            'amount'     => $money->amount,
+            'currency'   => $money->currency,
+            'customerId' => 'cust_jCgGLDVvj9hO8o0z4L3oIIvT',
         ];
 
         $result = $this->send($body);

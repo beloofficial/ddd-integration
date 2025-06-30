@@ -26,6 +26,7 @@ class AciGatewayTest extends TestCase
 
         $mockResponse = $this->createMock(ResponseInterface::class);
         $mockResponse->method('getBody')->willReturn($this->createStreamMock($json));
+        $mockResponse->method('getStatusCode')->willReturn(200);
 
         $mockRequest = $this->createMock(RequestInterface::class);
         $result = new Result($mockRequest, $mockResponse);
@@ -56,6 +57,7 @@ class AciGatewayTest extends TestCase
 
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getBody')->willReturn($this->createStreamMock($json));
+        $response->method('getStatusCode')->willReturn(200);
 
         $request = $this->createMock(RequestInterface::class);
         $result  = new Result($request, $response);

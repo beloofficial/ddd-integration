@@ -6,9 +6,12 @@ namespace App\Modules\PaymentOrchestration\Infrastructure\Gateway\Shift4;
 
 use App\Modules\PaymentOrchestration\Infrastructure\Api\Result;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 final class Shift4GatewayResponseFactory
 {
+    private const UNKNOWN_ERROR = 'Unknown API error';
+
     /**
      * @throws Exception
      */
@@ -18,6 +21,10 @@ final class Shift4GatewayResponseFactory
 
         if (is_array($data) === false) {
             throw new Exception('Unexpected response');
+        }
+
+        if ($result->response->getStatusCode() !== Response::HTTP_OK) {
+            throw new Exception($data['error']['message'] ?? self::UNKNOWN_ERROR);
         }
 
         return new Shift4GatewayResponse(
