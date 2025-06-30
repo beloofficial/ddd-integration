@@ -19,3 +19,8 @@ RUN curl -LsS https://github.com/symfony-cli/symfony-cli/releases/latest/downloa
     -o /usr/local/bin/symfony && chmod +x /usr/local/bin/symfony
 
 WORKDIR /var/www/project
+
+COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
+CMD ["php-fpm"]
